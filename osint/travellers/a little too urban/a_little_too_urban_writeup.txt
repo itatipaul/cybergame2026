@@ -1,0 +1,34 @@
+Travellers - A little too urban
+Points: 496
+
+This suspect made the mistake of sharing a photo in the middle of the city. It shouldn't be hard to find them, right? We heard this suspect likes to go clubbing. Find the nearest club’s name near where this photo was taken.
+
+Flag format: SK-CERT{Club_name}
+
+OSINT Writeup: Travellers - A Little Too Urban
+1. Target Identification
+
+The image (travellers_part4.jpg) depicts a modern urban area under heavy fog. The primary visual anchor is a glass-fronted building with the address 67a clearly visible. In the background, a distinctive blue-glass skyscraper (identified as the Šumavská Tower) is under construction.
+2. Geolocation
+
+    City: Brno, Czech Republic.
+
+    Exact Location: The photographer is standing in the plaza of the Šumavská 67a business center.
+
+    Coordinates: Roughly 49.2104, 16.5966.
+
+3. Finding the "Nearest Club"
+
+The challenge hints that the suspect is a fan of the clubbing scene. By conducting a proximity search from the Šumavská 67a entrance:
+
+    The Measurement: As seen in the provided satellite imagery (alterna club.jpg), a measurement of 180.80 meters was taken directly from the building.
+
+    The Destination: The measurement leads across Kounicova street to a building within the university residential block.
+
+    The Venue: The specific venue at the end of this line is the Alterna club (Music Club Alterna).
+
+4. Conclusion
+
+While other venues exist in the wider Brno area, the direct proximity measurement of 180m confirms that the intended meeting spot or local haunt is the Alterna club.
+
+Flag: SK-CERT{Alterna_club}

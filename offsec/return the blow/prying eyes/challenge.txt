@@ -1,0 +1,4 @@
+ Return the blow - Prying eyes
+Points: 497
+
+During the development of our app, we have been approached by a friendly dude who liked to commit tiny bugfixes to our app. He quickly earned our trust, and thus, we let him become an official maintainer of the app. We didn't check his background, and I'm feeling paranoid about him. Can you check the codebase to confirm that I have nothing to worry about?

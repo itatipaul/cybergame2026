@@ -1,0 +1,5 @@
+ WebBasics - OTP
+Points: 481
+
+There is a highly secure, certified, and visually beautiful application for generating daily tokens from secret seeds. But only one seed can generate the flag….
+http://exp.cybergame.sk:7020

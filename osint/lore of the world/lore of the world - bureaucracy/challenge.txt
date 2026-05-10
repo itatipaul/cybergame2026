@@ -1,0 +1,6 @@
+ lore of the world - bureaucracy
+Points: 404
+
+Apparently, this building is among the most hated, not because of the person, but because of what it stands for. A lot of people had (or rather tried) to fill in some kind of document, but unfortunately, due to a really messy bureaucracy, most of them failed. I want to research this situation a little, but I need to find the document’s name. Can you find it?
+
+Flag format: SK-CERT{name_of_the_document}

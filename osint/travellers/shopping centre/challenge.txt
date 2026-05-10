@@ -1,0 +1,6 @@
+ Travellers - Shopping Centre
+Points: 495
+
+We found a lead on a popular forum linked to the second suspect of this hacktivist group. They go by BelkaAndStrelka online, and we found this picture linked to them. The picture was taken from in front of a big building. What is the building’s name behind the photographer?
+
+Flag format: SK-CERT{Building_Name}

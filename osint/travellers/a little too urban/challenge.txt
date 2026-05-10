@@ -1,0 +1,7 @@
+
+Travellers - A little too urban
+Points: 496
+
+This suspect made the mistake of sharing a photo in the middle of the city. It shouldn't be hard to find them, right? We heard this suspect likes to go clubbing. Find the nearest club’s name near where this photo was taken.
+
+Flag format: SK-CERT{Club_name}

@@ -1,0 +1,7 @@
+
+Travellers - Public Transit
+Points: 494
+
+We are looking for numerous individuals related to a hacktivist group called Travellers. Reports show that the group consists of 4 people, located throughout the entire world. We’ve traced back an image sent in an internet forum to one of the members. From their messages, we know that they are supposed to meet on the nearest island.
+
+Flag format: SK-CERT{Name_of_the_island}

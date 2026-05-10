@@ -1,0 +1,4 @@
+ Return the blow - Broken trust
+Points: 497
+
+Thanks to you, we found out that he did inject malicious code. And it looks like he sends all the data to a really poorly written website. Can we return the blow? Scan everything, there must be something hidden.

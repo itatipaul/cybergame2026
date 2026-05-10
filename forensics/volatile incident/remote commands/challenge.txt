@@ -1,0 +1,4 @@
+ Volatile incident - Remote commands
+Points: 498
+
+You found the backdoor. What was it executing?

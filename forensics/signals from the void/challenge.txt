@@ -1,0 +1,6 @@
+ Signals from the <void>
+Points: 473
+
+You work at the corporation, searching for signals from deep space. Suddenly, right before clocking out, the satellite caught a burst of random noise. Your peers think nothing of it, but you feel something is hidden in the noise.
+
+Challenge handout file: https://files.cybergame.sk/signals-from-the-void-dea91aaa-a835-4c61-9b5f-4320eef9f0b3/handout.7z

@@ -1,0 +1,46 @@
+This writeup covers the OSINT (Open Source Intelligence) process used to solve this challenge, from identifying the building in the image to locating the specific meeting point.
+Challenge Overview
+
+    Target: A hacktivist group called "Travellers."
+
+    Goal: Identify the building in the provided image and find the "nearest island" where the members are meeting.
+
+    Flag Format: SK-CERT{Name_of_the_island}
+
+Phase 1: Image Analysis & Geolocation
+
+The provided image (travellers_part1.jpg) shows a modern building with distinct architectural features:
+
+    Large glass curtain walls.
+
+    A prominent wood-beamed cantilevered roof structure (Glulam beams).
+
+    High-tech interior classrooms visible through the glass.
+
+By performing a reverse image search or searching for "modern construction college building wood beams Canada," the building is identified as the Algonquin Centre for Construction Excellence (ACCE), located at Algonquin College’s Woodroffe Campus in Ottawa, Ontario.
+
+    Address: 1385 Woodroffe Ave, Nepean, ON K2G 1V8, Canada.
+
+Phase 2: Identifying the "Nearest Island"
+
+The challenge text states that the group is "supposed to meet on the nearest island" relative to the location where the photo was sent.
+
+    Scanning the Immediate Vicinity: Using satellite imagery (Google Maps) to look at the area surrounding the ACCE building.
+
+    The Landmark: Directly across Woodroffe Avenue from the college is Centrepointe Park.
+
+    The Feature: Inside Centrepointe Park, there is a man-made pond (the Centrepointe Pond). In the middle of this pond is a small, distinct landmass connected by a bridge.
+
+    The Name: This specific landmass is officially known as Point Island.
+
+Phase 3: Verification
+
+    Distance: Point Island is approximately 600 meters (a 7–10 minute walk) from the ACCE building.
+
+    Logic: In a "hacker" or "spy" themed challenge, "meeting at the nearest island" often refers to a local landmark that looks like a getaway or a secluded spot. Point Island is the only geographical "island" within the immediate walking radius of the college.
+
+Final Solution
+
+Based on the proximity to the Algonquin College Centre for Construction Excellence, the meeting spot is Point Island.
+
+Flag: > SK-CERT{Point_Island}

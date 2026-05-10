@@ -1,0 +1,5 @@
+ Maverick
+Points: 495
+
+Can you hack Maverick as he flies by?
+nc exp.cybergame.sk 7030 

@@ -1,0 +1,6 @@
+ lore of the world - good doggie
+Points: 469
+
+Not far away from the previous place, I found a really, really good doggie. It’s just chilling there, left all alone. What could the name of such a good doggie be?
+
+Flag format: SK-CERT{name_of_the_dog}

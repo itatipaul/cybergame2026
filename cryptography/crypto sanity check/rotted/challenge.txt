@@ -1,0 +1,4 @@
+ Crypto Sanity Check - rotted
+Points: 100
+
+FX-PREG{flzz37evp_e0747v0a}

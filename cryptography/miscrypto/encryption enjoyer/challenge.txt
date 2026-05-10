@@ -1,0 +1,4 @@
+ Miscrypto - encryption enjoyer
+Points: 416
+
+An incident response team recovered a single file from a compromised server, but the attacker encrypted it before disconnecting. Your task is to recover the original file.

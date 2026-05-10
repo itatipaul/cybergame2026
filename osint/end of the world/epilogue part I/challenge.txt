@@ -1,0 +1,10 @@
+End of the World - Epilogue part. I
+Points: 500
+
+I got lost in the nether. I heard you can find just about anything using these bedrock patterns. Can you find the world seed?
+
+The signs have the coordinates of the block they are connected to written on them. The game version is 1.21.3
+
+NOTE: Do NOT bruteforce the seed against the platform. You will be banned.
+
+Flag format: SK-CERT{seed}

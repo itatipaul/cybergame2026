@@ -1,0 +1,53 @@
+Volatile Incident - Activity Check: Writeup
+Challenge Overview
+
+    Category: Forensics
+    Points: 496
+    Task: Analyze a RAM snapshot for malicious activity and find what commands were executed.
+
+Tools Used
+
+    strings (Linux command line utility)
+    exiftool (for initial file identification)
+
+Step 1: File Identification
+
+Running file * and exiftool * revealed:
+
+    dump.mem is an ELF 64-bit core file (Linux memory dump), 4.4GB uncompressed
+    This ruled out Windows-based analysis tools and confirmed we needed Linux memory forensics
+
+Step 2: Quick Win with Strings
+
+Instead of going straight to Volatility, a simple strings search was attempted first:
+bash
+
+strings dump.mem | grep "SK-CERT{"
+
+Step 3: Results
+
+The command immediately returned bash history artifacts from memory, revealing two flags embedded as comments in executed commands:
+
+Command 1:
+bash
+
+cat /etc/shadow #SK-CERT{4....................g}
+
+A classic privilege escalation attempt — reading /etc/shadow (which contains hashed passwords), with the flag hidden as a comment.
+
+Command 2:
+bash
+
+ls ; #SK-CERT{5ymb0l5_4r3_imp0r74n7}
+
+A benign ls command with the flag as a comment, executed by user michael on localhost.
+Key Takeaways
+
+    Always try strings | grep before spinning up heavy tools like Volatility — it can save enormous amounts of time
+    Linux bash history persists in RAM and is recoverable via memory forensics
+    Flags were hidden as bash comments (#) appended to commands, simulating a real attacker hiding notes in plain sight
+
+Flags
+
+    SK-CERT{5ymb0l5_4r3_imp0r74n7} (Activity Check flag)
+    SK-CERT{4....................g} (likely belongs to another sub-challenge)

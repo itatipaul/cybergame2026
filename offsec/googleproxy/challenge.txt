@@ -1,0 +1,6 @@
+
+Googleproxy
+Points: 500
+
+We found this tiny proxy app. Allegedly, it has a flag.
+http://178.105.66.241:8086/ 

@@ -1,0 +1,5 @@
+ v8
+Points: 498
+
+The V8 team has been busy optimizing JavaScript again… and something feels off. What is this new fast-path?
+nc exp.cybergame.sk 7022

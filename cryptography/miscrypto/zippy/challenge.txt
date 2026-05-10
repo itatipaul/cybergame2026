@@ -1,0 +1,1 @@
+Someone encrypted this file, can you guess the password ? I remember it contains something like -> flag is: SK-CERT{

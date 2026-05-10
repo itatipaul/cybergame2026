@@ -1,0 +1,6 @@
+ Travellers - A beautiful view
+Points: 496
+
+Another picture taken by a member of the group. This one will be hard to find; I can already feel it. We know they love coffee, so what is the nearest cafe to where this picture was taken?
+
+Flag format: SK-CERT{Name_of_the_cafe}

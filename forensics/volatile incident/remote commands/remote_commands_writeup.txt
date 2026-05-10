@@ -1,0 +1,117 @@
+Volatile Incident - Remote Commands: Writeup
+Challenge Overview
+
+    Category: Forensics
+    Points: 498
+    Task: Find what commands the backdoor was executing.
+
+Background
+
+From the previous challenge, we identified a malicious Python backdoor (.bash) running as PID 8235. The backdoor:
+
+    Listened on UDP port 47291
+    XOR decrypted incoming payloads using key "5fg6r48v3aes5"
+    Executed decrypted content via os.popen()
+
+Step 1: Initial Attempts
+
+We first tried simple string searches for common commands:
+bash
+
+strings dump.mem | grep -iE "^(cat |ls -|whoami|passwd|chmod)" | head -30
+
+This returned too much noise — mostly library references and documentation strings, not actual executed commands.
+
+We also tried:
+bash
+
+vol -f dump.mem linux.bash
+
+Which only showed legitimate user michael's bash history, not the backdoor's activity.
+Step 2: Process Memory Investigation
+
+We checked if os.popen() had spawned any child processes under PID 8235:
+bash
+
+vol -f dump.mem linux.pstree | grep -A 5 "8235"
+
+No child processes were found — the command had already completed by the time the dump was taken.
+Step 3: Heap Memory Search
+
+We identified the heap region for PID 8235 (0x562713c07000 - 0x562713d1b000) and tried to extract strings from it:
+bash
+
+python3 -c "
+with open('dump.mem', 'rb') as f:
+    data = f.read()
+heap = data[0x562713c07000:0x562713d1b000]
+import re
+strings = re.findall(b'[ -~]{6,}', heap)
+for s in strings:
+    print(s.decode('ascii', errors='ignore'))
+"
+
+The heap was empty/not mapped in the dump — no results.
+Step 4: Searching for UDP Packets in Memory
+
+Since the backdoor receives XOR-encrypted UDP packets on port 47291, we searched for actual captured network packets in the memory dump.
+
+Port 47291 in hex is 0xB8BB. We wrote a script to find UDP packets destined for this port and XOR decrypt their payloads:
+python
+
+# solve.py
+import struct
+
+with open('dump.mem', 'rb') as f:
+    data = f.read()
+
+dst_port = bytes([0xB8, 0xBB])
+K = '5fg6r48v3aes5'
+
+pos = 0
+while True:
+    pos = data.find(dst_port, pos)
+    if pos == -1: break
+    udp_start = pos - 2
+    length_bytes = data[udp_start+4:udp_start+6]
+    length = struct.unpack('!H', length_bytes)[0]
+    if 8 < length < 200:
+        payload = data[udp_start+8:udp_start+length]
+        try:
+            c = ''.join(chr(payload[i] ^ ord(K[i % len(K)])) for i in range(len(payload)))
+            if all(32 <= ord(ch) < 127 for ch in c):
+                print(f'{hex(pos)}: [{length} bytes] {c}')
+        except:
+            pass
+    pos += 1
+
+Step 5: Results
+
+Running the script:
+bash
+
+python3 solve.py
+
+Output:
+
+0x1a18c7f0: [56 bytes] cat /etc/shadow #SK-CERT{4n0th3r_w4y_0f_c4rv1ng}
+0x9c6407f0: [56 bytes] cat /etc/shadow #SK-CERT{4n0th3r_w4y_0f_c4rv1ng}
+0xa6eb5bb0: [56 bytes] cat /etc/shadow #SK-CERT{4n0th3r_w4y_0f_c4rv1ng}
+
+The backdoor was executing cat /etc/shadow — attempting to read the system's password hashes. The command appeared 3 times in memory, indicating it was sent multiple times through the backdoor.
+
+This also confirms what we saw in Challenge 1 (Activity Check), where cat /etc/shadow appeared in bash history — the attacker was consistently targeting the shadow password file.
+Key Takeaways
+
+    UDP packets persist in memory long after they've been processed — network forensics is possible from RAM dumps
+    Searching for port numbers as raw bytes in memory dumps can reveal captured network traffic
+    The attacker's full kill chain was:
+        SSH into machine as michael from 192.168.100.51
+        Deploy .bash backdoor disguised as a shell config file
+        Run it persistently with nohup as root
+        Send XOR-encrypted UDP commands to exfiltrate /etc/shadow
+    Always look for raw packet data in memory when investigating network-based backdoors
+
+Flag
+
+SK-CERT{4n0th3r_w4y_0f_c4rv1ng}

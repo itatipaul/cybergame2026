@@ -1,0 +1,5 @@
+I took a flight around the world to a really nice vantage point. As I flew farther from the ground, I managed to snap this picture and freeze this moment in time forever. What are the exact X, Y, and Z coordinates of the place I took the picture from?
+
+Flag format: SK-CERT{XXX,YYY,-ZZZ}; FLAG DOESN’T USE DECIMALS.
+
+Example: SK-CERT{321,43,-200}

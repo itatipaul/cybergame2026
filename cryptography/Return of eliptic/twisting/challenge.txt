@@ -1,0 +1,19 @@
+ Return of eliptic - Twisting the truth
+Points: 500
+
+Who will believe Jacob now? He is just twisting the truth, so he would look cool.
+
+Hint: Each leakage row is only a modular shadow of the same reused secret. Hint2: s ≡ A*k + B (mod m) Hint3: A_and_B = [ (20351961, 13972866),
+(1121, 18695),
+(41963, 125946),
+(13797, 26843),
+(153168, 827907),
+(974024, 985846),
+(1085609, 3427804),
+(2019698, 24894321),
+(37418, 129373),
+(9508, 7191),
+(4083, 93632),
+(82129, 156223),
+(39537, 59977),
+(771790, 20487579), ]

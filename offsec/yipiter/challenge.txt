@@ -1,0 +1,7 @@
+ Yipiter
+Points: 500
+
+Yipeeee! Finally! A CTF challenge that is also a practical application!!! No AI support tho :/
+
+Note: Handout has been updated, please re-download (Apr. 11.)
+46.62.153.171:5555 
