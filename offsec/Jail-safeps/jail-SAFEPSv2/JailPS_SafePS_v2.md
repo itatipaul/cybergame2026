@@ -1,0 +1,37 @@
+# JailPS – SafePS v2
+
+Category: Misc / PowerShell Jail
+Points: 473
+Goal: Bypass a "hardened" PowerShell environment that now strictly forbids whitespace.
+1. Analysis
+
+The challenge is an evolution of the previous safeps. While the blacklist of forbidden words remains largely the same, the environment has been "hardened" with two significant changes to the echo command logic:
+
+    Whitespace Block: The script now checks $exprTrimmed -match '\s'. If any space, tab, or newline is detected, the command is rejected.
+
+    Forced Prefix: The input is now wrapped inside a literal echo command: [ScriptBlock]::Create("echo $exprTrimmed").
+
+2. Exploitation Strategy
+
+The core vulnerability remains the use of [ScriptBlock]::Create, which allows for code execution. However, we had to overcome the inability to use spaces to separate the command gv (Get-Variable) from its argument FLAG.
+
+The Breakthrough:
+PowerShell’s parser is flexible enough to distinguish between a command and its arguments if they are structurally separated by tokens like parentheses or quotes, even without a space character.
+
+    Reconstructing the Command: We reused the string concatenation ("g"+"v") to generate the gv alias without triggering the "gv" or "get-variable" string filters.
+
+    The Call Operator: The & operator executes the resulting string.
+
+    No-Space Argument Passing: By placing the argument "F*" immediately after the command's parentheses—(&("g"+"v")"F*")—the parser treats "F*" as the first positional parameter for gv.
+
+    Wildcard Bypass: Using F* instead of FLAG avoided the "flag" and "sk" filters found in the $Bad list.
+
+3. Final Payload
+PowerShell
+
+echo (&("g"+"v")"F*")
+
+Note: The outer echo is provided by the jail; the input starts at the first parenthesis.
+4. Flag
+
+SK-CERT{1_l0v3_p0w45h3LLz_h0P3_u2}
