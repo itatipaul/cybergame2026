@@ -1,0 +1,29 @@
+# Lore of the World – Good Doggie
+
+CTF Challenge Write-up: Lore of the World - Good Doggie
+
+Challenge: Lore of the world - Good doggie
+Points: 469
+Category: OSINT
+Flag: SK-CERT{Mojito}
+Challenge Description
+
+Given a screenshot showing a tamed wolf/dog sitting in a cozy area near the Permit Office in Hermitcraft Season 10, we need to find the name of this "really, really good doggie" that's "just chilling there, left all alone."
+Solution
+Step 1: Location Context
+
+The challenge states the dog is "not far away from the previous place" (the Permit Office), placing it in the Magic Mountain area of Hermitcraft Season 10.
+Step 2: Visual Analysis
+
+The screenshot shows:
+
+    A tamed wolf (red collar) sitting in a relaxed pose
+    Cozy area with campfires and tropical/natural aesthetic
+    Green building elements suggesting Magic Mountain vicinity
+
+Step 3: Finding the Dog's Name
+
+Research into Hermitcraft Season 10 pets in the Magic Mountain area revealed the dog's name is Mojito - fitting the relaxed, tropical vibe of the location.
+Flag
+
+SK-CERT{Mojito}
