@@ -2,6 +2,8 @@
 
 My writeups for **CyberGame 2026**, a CTF hosted by [SK-CERT](https://www.sk-cert.sk/). All flags follow the format `SK-CERT{...}`.
 
+I tend to over-do and over-complicate things - you've been warned. If you have a better solution, send me a Pull Request 🙂.
+
 ---
 
 ## 📁 Structure
