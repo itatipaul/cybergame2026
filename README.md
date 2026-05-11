@@ -35,6 +35,8 @@ Each challenge folder contains:
 | Challenge | Writeup |
 |-----------|---------|
 | Lesson Zero | [rEquestria_Lesson_Zero.md](offsec/requestria/requestria-lesson-zero/rEquestria_Lesson_Zero.md) |
+| The Other | [rEquestria-the-other.md](offsec/requestria/requestria-the-other/rEquestria-the-other.md) |
+
 
 ### Web Basics
 | Challenge | Writeup |
