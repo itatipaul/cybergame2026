@@ -1,9 +1,10 @@
 # ORMT Challenge 3
 
-================================================================
+Author-Senpai
+
 WRITEUP: ORMT Challenge 3 (SK-CERT CTF)
+
 Flag: SK-CERT{4ggr3g4t3_r4t3_t3mpl4t3_sqli}
-================================================================
 
 CHALLENGE OVERVIEW
 ------------------
