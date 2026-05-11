@@ -20,7 +20,7 @@ Each challenge folder contains:
 ### ORMT Series
 | Challenge | Writeup |
 |-----------|---------|
-| ORMT 1 — ORM Injection | [ORM_Injection.md](offsec/ormt/ormt1/ORM_Injection.md) |
+| ORMT 1 — ORM Injection | [ORM_Injection.md](offsec/ormt/ormt1/ORMT1_Injection.md) |
 | ORMT 2 — Connector Injection | [ORM_Challenge2.md](offsec/ormt/ormt2/ORM_Challenge2.md) |
 | ORMT 3 — Template SQLi | [ORM_Challenge3.md](offsec/ormt/ormt3/ORM_Challenge3.md) |
 
