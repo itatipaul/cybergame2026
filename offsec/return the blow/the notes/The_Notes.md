@@ -1,10 +1,13 @@
 # Return the Blow: The Notes
 
 Author - Senpai
+
 Flag: SK-CERT{cu570m_jw7_d035n7_v3r1fy_l5b}
+
 Return the Blow: The Notes — Detailed Writeup
 
 Points: 497 | Category: Web / JWT Logic Bypass
+
 Objective
 
 The attacker's server at http://g00gl3.online:7050 stores admin notes containing the flag behind /api/admin/data, protected by a requireAdmin middleware that checks the JWT role claim.
