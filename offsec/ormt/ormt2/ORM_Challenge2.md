@@ -1,5 +1,6 @@
 # ORMT Challenge 2
 
+Author - Senpai
 WRITEUP: ORMT Challenge 2 (SK-CERT CTF)
 
 Flag: SK-CERT{cve_2025_64459_c0nn3ct0r_1nj3ct10n}
