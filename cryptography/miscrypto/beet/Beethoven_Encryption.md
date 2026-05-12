@@ -61,6 +61,7 @@ The final phrase revealed: "THIS IS MUSIC TO MY EARS".
 
 The platform accepted the raw string without underscores or hyphens:
 SKCERTTH151SMU51C70MY34R5
+
 Lessons Learned
 
     Format Matters: CTF flags often require strict adherence to the output of the decoding tool; adding "standard" separators like underscores can result in a "Wrong Answer" even if the content is correct.
