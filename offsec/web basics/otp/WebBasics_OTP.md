@@ -1,0 +1,95 @@
+# WebBasics – OTP
+
+Author - Senpai
+
+CTF Writeup: WebBasics - OTP
+
+Challenge Name: WebBasics - OTP
+
+Category: Web
+
+Points: 481
+
+Flag: SK-CERT{y0u_h4v3_f0und_4dmin_s3cr37_70k3n}
+
+Challenge Description
+
+    There is a highly secure, certified, and visually beautiful application for generating daily tokens from secret seeds. But only one seed can generate the flag.
+
+Initial Reconnaissance
+
+After visiting the application, we are greeted with a clean login/register page built with Materialize CSS.
+
+    Registered a new account (roots).
+    Logged in and landed on the Token Dashboard.
+
+The dashboard showed:
+
+    A daily token (SHA-256 looking 64-character hex string)
+    A link to /profile/179 (our user ID)
+
+Exploring the Profile Page
+
+Navigating to /profile/179 revealed a critical feature:
+
+    Our Secret Initializator (seed) was visible and editable.
+    We could change both password and the secret seed via a POST form.
+
+This immediately suggested that the daily token is generated using:
+
+token = some_hash_function(secret_seed + current_date)
+
+Discovering IDOR (Insecure Direct Object Reference)
+
+While testing, I changed the URL from /profile/179 to /profile/1.
+
+Result: Successfully accessed the profile of user ID 1 (admin).
+
+Key finding on /profile/1:
+
+    Username: admin
+    Secret Initializator: a95aa045a8bf5e502ee2541dd2a00925e2e825eacbbc22dadfb4ba027094dbf0
+
+This confirmed a severe IDOR vulnerability — any authenticated user could view and read other users' secret seeds by changing the numeric ID in the URL.
+The Attack
+
+    Logged in as our user (roots, ID 179).
+    Went to /profile/1 and copied the admin's secret seed.
+    Went back to /profile/179.
+    Replaced our own secret_init with the admin's seed.
+    Returned to the main dashboard (/).
+
+Result: The generated "Today Token" changed to the flag:
+
+SK-CERT{y0u_h4v3_f0und_4dmin_s3cr37_70k3n}
+
+Root Cause Analysis
+
+    IDOR: User profile data (especially the secret seed) was not properly protected by ownership checks. The application trusted the ID parameter in the URL.
+    Overly permissive profile editing: Any authenticated user could modify their own secret seed.
+    Secret seed directly controls token output: The challenge designer made the seed the single source of truth for generating the flag token.
+    No rate limiting or validation on the secret_init field.
+
+Why This Worked
+
+The application likely implements something similar to this on the backend:
+
+# Pseudocode
+def generate_token(secret, date):
+    data = f"{secret}:{date}"          # or secret + date
+    return hashlib.sha256(data.encode()).hexdigest()
+
+# On dashboard:
+if token == "expected_flag_token":
+    return flag
+else:
+    return normal_token
+
+By stealing the admin's secret, we perfectly reproduced the correct token for the current day.
+
+Lessons Learned
+
+    Always test for IDOR on numeric IDs in URLs (/profile/1, /user/123, etc.).
+    Sensitive values like secret seeds should never be editable by normal users in this way.
+    Profile pages should enforce strict ownership (if user.id != requested_id: deny).
+    Even "daily tokens" can be fully controlled if the seed is controllable.
