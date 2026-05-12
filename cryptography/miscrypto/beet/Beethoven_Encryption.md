@@ -23,16 +23,7 @@ The challenge provides an image (beethoven.png) containing two lines of musical 
 
 2. Decoding Process
 
-To decode the image, each note's position on the staff must be mapped to a specific alphanumeric character.
-Step A: Mapping the Notes
-
-By analyzing the vertical position of each note on the staff (Lines: E-G-B-D-F; Spaces: F-A-C-E):
-
-    The first note is on the top line (F).
-
-    The second note is in the second space from the bottom (A).
-
-    The third note is in the third space from the bottom (C).
+https://www.dcode.fr/music-sheet-cipher
 
 Step B: Tooling
 
