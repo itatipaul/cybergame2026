@@ -1,0 +1,6 @@
+DiskBasics - Perfectly Normal Activity
+Points: 481
+
+The employee says he definitely does not remember encrypting his files. But something did… Find out what and how did it get there!
+
+Note: Use files from first part. Flag format: SK-CERT{flag2_…}

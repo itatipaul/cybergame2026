@@ -1,0 +1,6 @@
+DiskBasics - After Hours
+Points: 488
+
+The incident did not stop at initial compromise. Evidence indicates that the system remained useful to someone for reasons that would not look great in an audit report. Determine what happened next and recover the final case artifact.
+
+Note: Use files from first part. Flag format: SK-CERT{flag4_…}

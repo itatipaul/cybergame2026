@@ -1,0 +1,4 @@
+ RSA - Exponent works
+Points: 496
+
+Why would somebody use such big numbers ?

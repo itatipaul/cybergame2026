@@ -1,0 +1,1 @@
+unzip -P "{85add2c0}{0a6899cf}{b100bf91}{4abc69dfc}" flag3.zip

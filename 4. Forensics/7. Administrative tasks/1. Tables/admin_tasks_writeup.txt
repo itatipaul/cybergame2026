@@ -1,0 +1,188 @@
+================================================================
+CTF WRITE-UP: Lost in Excel Sheets
+Challenge: Excel.xlsm + flag1.zip
+Flag: SK-CERT{L057_1N_3XC3L_5H3375}
+================================================================
+
+OVERVIEW
+--------
+We're given an Excel macro file (Excel.xlsm) and a password-protected
+zip (flag1.zip). The README tells us there are 4 hidden message parts
+inside the Excel file, each in format HIDDEN_MSG_x_{something}, and
+the final password is assembled in order 1-4-2-3.
+
+Sounds simple. It is not.
+
+
+THE KEY INSIGHT (FOR NEWBIES)
+------------------------------
+An .xlsm file is actually just a ZIP archive. You can rename it to
+.zip and extract it to see all the raw XML files inside. Excel is
+just a fancy viewer on top of plain text XML. This is true for all
+modern Office formats (.xlsx, .docx, .pptx etc.).
+
+"file Excel.xlsm 
+Excel.xlsm: Microsoft OOXML
+"
+
+Once you know this, "hiding" things in Excel means hiding things
+somewhere in those XML files - not necessarily in visible cells.
+
+
+WHERE THE PARTS WERE HIDDEN
+-----------------------------
+
+--- PART 1 (easiest, but sneaky) ---
+
+Location: The "Infrastructure" sheet (sheet3.xml)
+
+The cell value HIDDEN_MSG_1_{8f2e8d95} was split across 6 consecutive
+cells in row 495, way off to the right at columns BS through BX.
+The row and column combination meant it was completely off-screen
+from the normal view. You'd never scroll there by accident.
+
+Value: 8f2e8d95
+
+
+--- PART 2 (hidden in a comment, at a ridiculous row number) ---
+
+Location: xl/comments1.xml - the legacy "Notes" comment system
+
+Excel has two comment systems: old-style Notes and newer Threaded
+Comments. Part 2 was stored as a plain Note on cell QXY816551.
+
+Let that row number sink in: 816,551. Excel supports over 1 million
+rows. Someone put a comment at row 816 THOUSAND, column QXY (which
+is itself hundreds of columns to the right). No human would ever
+scroll there.
+
+The comment text was literally: HIDDEN_MSG_2_{aa30c9bf}
+
+Value: aa30c9bf
+
+
+--- PART 3 (the most technically interesting) ---
+
+Location: A hidden sheet called "Resultz" (sheet6.xml), reading
+data from a VERY HIDDEN sheet called "." (sheet5.xml)
+
+Excel has two levels of sheet hiding: "hidden" (you can unhide it
+from the menu) and "very hidden" (you need VBA or XML editing to
+even see it exists). The "." sheet was very hidden.
+
+Sheet6 contained cells with enormous CHAR(ROUND(...)) formulas.
+CHAR() converts a number to a character (like CHAR(72) = 'H').
+Each formula added up dozens of numeric cell references from the
+data sheet to produce a single ASCII character code.
+
+When you evaluate all the CHAR() calls in sequence, they spell out
+fake VBA code (with intentional typos: "Sua" instead of "Sub",
+"Ie" instead of "If"):
+
+    Sua Run()
+        Dim a As String
+        a = "}6a0184c0{_3_GSM_"
+        a = "NEDDIG"           <- this overwrites a (red herring line)
+        a = a & a
+        Ie Len(a) > 0 Sgen
+            MsgBox StrReverse(a)
+        End Ie
+    End Sua
+
+The trick: take the string from line A4 ("}6a0184c0{_3_GSM_"),
+concatenate "NEDDIH" (which is "HIDDEN" spelled backwards), then
+reverse the whole thing:
+
+    StrReverse("}6a0184c0{_3_GSM_" + "NEDDIH")
+    = StrReverse("}6a0184c0{_3_GSM_NEDDIH")
+    = HIDDEN_MSG_3_{0c4810a6}
+
+Value: 0c4810a6
+
+
+--- PART 4 (hiding in metadata, not data) ---
+
+Location: xl/persons/person.xml
+
+Excel's threaded comments system stores author identity in a
+"persons" file. This file holds display names, email addresses,
+and internal user IDs for everyone who left a comment.
+
+The challenge author hid MSG_4 inside the userId field of the
+commenter "Michael Jackson":
+
+    userId="S::Michael.jackson@music.com::443ecc80-...::HIDDEN_MSG_4_{83b44f09}"
+
+This is pure metadata - nothing to do with any cell or visible
+content whatsoever. You'd only find it by grepping the raw XML.
+
+Value: 83b44f09
+
+
+ASSEMBLING THE PASSWORD
+------------------------
+Order given: 1-4-2-3
+
+MSG_1 = 8f2e8d95
+MSG_4 = 83b44f09
+MSG_2 = aa30c9bf
+MSG_3 = 0c4810a6
+
+Password = 8f2e8d9583b44f09aa30c9bf0c4810a6
+
+Unzip with this password and you get the flag.
+
+
+HOW TO APPROACH THIS TYPE OF CHALLENGE (METHODOLOGY)
+------------------------------------------------------
+1. Treat the Office file as a ZIP. Extract it immediately.
+   (unzip -d output_folder file.xlsm  OR  rename to .zip first)
+
+2. Grep everything for the pattern you're looking for:
+   grep -ri "HIDDEN_MSG" .
+
+3. Don't trust only cell data. Check ALL XML files:
+   - sharedStrings.xml  (all text in cells)
+   - comments1.xml      (old Notes)
+   - threadedComments/  (new Comments)
+   - persons/           (comment author metadata)
+   - drawings/          (shapes and images)
+   - workbook.xml       (sheet names, defined names, properties)
+   - docProps/app.xml   (document metadata like Company, Manager)
+
+4. List ALL sheets including hidden ones. In workbook.xml look for:
+   state="hidden"      <- can be unhidden by user
+   state="veryHidden"  <- requires XML or VBA to access
+
+5. For formula-based encoding: look for CHAR(), CODE(), SUBSTITUTE(),
+   or any formula that produces a string from numeric values.
+   These are classic obfuscation techniques.
+
+6. Check extreme cell addresses. Row 816,000 or column QXY are
+   legitimate Excel locations that nobody would ever scroll to.
+
+
+TOOLS USED
+-----------
+- unzip / file extraction
+- grep -ri for pattern searching
+- Python with xml.etree.ElementTree for XML parsing
+- Manual formula tracing for the CHAR() obfuscation
+
+
+LESSONS LEARNED
+----------------
+- "Hidden" in Excel doesn't mean encrypted. It just means not visible
+  by default. The raw data is always there in the XML.
+- Excel metadata fields (author names, user IDs, document properties)
+  are valid hiding spots that most people never look at.
+- Very hidden sheets are a real feature that most Excel users don't
+  know exist.
+- Complex formulas can encode data that looks like gibberish until
+  you trace the values manually.
+- Always extract and grep Office files in CTFs. Never just open them.
+
+================================================================
+FLAG: SK-CERT{L057_1N_3XC3L_5H3375}
+     (Translation: LOST IN EXCEL SHEETS - leet speak)
+================================================================

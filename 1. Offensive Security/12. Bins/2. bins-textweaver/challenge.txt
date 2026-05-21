@@ -1,0 +1,5 @@
+ Bins - Textweaver
+Points: 496
+
+I got tired of typing the same boilerplate over and over, so I wrote a blazing-fast C++ CLI macro expander. You can define variables, concatenate them, and evaluate massive text blocks dynamically.
+nc exp.cybergame.sk 7008

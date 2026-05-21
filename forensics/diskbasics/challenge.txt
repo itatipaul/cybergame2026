@@ -1,9 +1,0 @@
- DiskBasics - Business as Usual
-Points: 500
-
-A routine workstation image from a totally normal Monday has been provided by IT, who would like to stress that nothing suspicious was happening at the time of collection. Verify that claim by examining the evidence package and recovering the first key case artifact which is flag1.txt Files:
-
-    Mirror #1: https://drive.google.com/file/d/1ZcGU9_hdsekAQkK-5iwORwhkdNgYPThZ
-    Mirror #2: https://files.cybergame.sk/diskbasics-67a70aaf-e773-42f6-9769-c343b5f2db33/vm.zip
-
-MD5: b1f9dd51fafce46994d55f25df630800 SHA256: ec6f886119ba61bb4daf7956cc614f1c85d4b54aefe63801c47567e79e41724c

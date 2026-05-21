@@ -1,0 +1,9 @@
+dnsrecon -d sanity.cybergame.sk
+2026-03-21T07:55:51.700508+0300 INFO Starting enumeration for domain: sanity.cybergame.sk
+2026-03-21T07:55:51.700904+0300 INFO std: Performing General Enumeration against: sanity.cybergame.sk...
+2026-03-21T07:55:51.840533+0300 ERROR No answer for DNSSEC query for sanity.cybergame.sk
+2026-03-21T07:55:52.401161+0300 INFO     TXT sanity.cybergame.sk SK-CERT{7rivi4l_dns_ch4ll3ng3}
+2026-03-21T07:55:52.536448+0300 INFO Enumerating SRV Records
+2026-03-21T07:55:53.000896+0300 ERROR No SRV Records Found for sanity.cybergame.sk
+2026-03-21T07:55:53.001663+0300 INFO Completed enumeration for domain: sanity.cybergame.sk
+

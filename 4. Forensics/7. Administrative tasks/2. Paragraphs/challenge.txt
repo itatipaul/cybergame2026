@@ -1,0 +1,4 @@
+ Administrative tasks - Paragraphs
+Points: 244
+
+We like Office documents, so what about this Base64 guide document ? Is something hidden here ? Please read README inside .zip file.

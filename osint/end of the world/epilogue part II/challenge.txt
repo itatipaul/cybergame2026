@@ -1,7 +1,0 @@
-I was looking for the ender dragon, and I got completely lost. Can you find the seed of the world I’m on right now?
-
-The seed range for this task is [5250000000, 5400000000]
-
-NOTE: Do NOT bruteforce the seed against the platform. You will be banned.
-
-Flag format: SK-CERT{seed}

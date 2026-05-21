@@ -1,6 +1,0 @@
- Volatile incident - Activity check
-Points: 498
-
-We received this RAM snapshot for forensic analysis. It should contain artifacts of malicious activity. Let’s first check what commands were executed.
-
-Link https://files.cybergame.sk/volatile-incident-a6160e9b-9516-489b-962a-3f99cc87c413/dump.zip sha256: 264aa283e6760397e8ccb009780c9f4691048767b3f77a9e4f542ac2b0fbc8ee md5: 5e87c9585d363082c103825049b3cb12

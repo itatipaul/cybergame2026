@@ -1,0 +1,268 @@
+Goldilocks Curve – CTF Writeup
+
+Category: Cryptography
+Concepts: EdDSA, Edwards Curves, Cofactor, Small-Subgroup Attack
+
+1. Challenge Overview
+
+We are given a Python implementation of a signature verification system based on an elliptic curve:
+
+Prime field:
+
+P=2448−2224−1
+P=2
+448
+−2
+224
+−1
+
+This is the field used by Ed448, also called the Goldilocks curve.
+
+The program verifies a signature and, if valid, uses the signature as input to a SHAKE-256 stream cipher to decrypt flag.enc.
+
+Important parts of the code:
+
+def verify(msg: bytes, sig: bytes) -> bool:
+    A_enc = effective_pub()
+    A = decode_point(A_enc)
+    R = decode_point(sig[:57])
+
+    S = int.from_bytes(sig[57:], "little")
+
+    k = challenge_scalar(sig[:57], A_enc, msg)
+
+    lhs = scalar_mul(BASE, S)
+    rhs = point_add(R, scalar_mul(A, k))
+
+    return lhs == rhs
+
+Verification checks the EdDSA equation:
+
+S⋅B=R+k⋅A
+S⋅B=R+k⋅A
+
+Where:
+
+Symbol	Meaning
+B	Base point
+A	Public key
+R	Nonce point
+S	Signature scalar
+k	Hash challenge
+2. Public Key Construction
+
+The public key is not given directly.
+
+Instead the challenge defines:
+
+def effective_pub():
+    left = decode_point(PUB_LEFT)
+    right = decode_point(PUB_RIGHT)
+    return encode_point(point_add(left, right))
+
+So the actual key used for verification is:
+
+A=PUB_LEFT+PUB_RIGHT
+A=PUB_LEFT+PUB_RIGHT
+
+This already hints that the author might manipulate the subgroup properties of the resulting key.
+
+3. Edwards Curves and Cofactor
+
+Ed448 is defined over a group whose size is:
+
+∣G∣=4⋅L
+∣G∣=4⋅L
+
+Where:
+
+L is a large prime
+
+4 is the cofactor
+
+Meaning the curve contains small subgroups of order 1, 2, and 4.
+
+Secure EdDSA implementations must clear the cofactor when verifying signatures.
+
+Correct verification usually checks:
+
+8(SB−R−kA)=0
+8(SB−R−kA)=0
+
+This ensures the result lies in the large prime subgroup.
+
+4. The Critical Bug
+
+The challenge does not clear the cofactor.
+
+Verification is simply:
+
+lhs = scalar_mul(BASE, S)
+rhs = point_add(R, scalar_mul(A, k))
+return lhs == rhs
+
+Because of this:
+
+If the public key lies in a small subgroup, the equation becomes trivial to satisfy.
+
+5. Small-Subgroup Attack
+
+If the public key has order 4, then:
+
+A∈{0,A,2A,3A}
+A∈{0,A,2A,3A}
+
+Instead of having ~2⁴⁴⁸ possibilities, we only have 4 possible points.
+
+6. Forging a Signature
+
+We choose:
+
+S=0
+S=0
+
+The verification equation becomes:
+
+0=R+kA
+0=R+kA
+
+or
+
+R=−kA
+R=−kA
+
+However:
+
+k=H(R∣∣A∣∣msg)
+k=H(R∣∣A∣∣msg)
+
+So k depends on R, making direct solving difficult.
+
+But because the subgroup has only 4 elements, we brute-force them.
+
+7. Possible R Values
+
+Since 
+A
+A has order 4:
+
+R∈{0,A,2A,3A}
+R∈{0,A,2A,3A}
+
+We simply test each candidate.
+
+Algorithm:
+
+Compute effective public key
+
+A = PUB_LEFT + PUB_RIGHT
+
+Generate subgroup elements
+
+0
+A
+2A
+3A
+
+For each candidate R:
+
+compute
+
+k = H(R || A || msg)
+
+check if
+
+R == -kA
+
+If true, the signature:
+
+sig = encode(R) || encode(S)
+
+is valid.
+
+Where:
+
+S = 0
+8. Exploit Script
+A = point_add(decode_point(PUB_LEFT), decode_point(PUB_RIGHT))
+A_enc = encode_point(A)
+
+candidates = [
+    IDENTITY,
+    A,
+    scalar_mul(A, 2),
+    scalar_mul(A, 3),
+]
+
+for R in candidates:
+
+    R_enc = encode_point(R)
+
+    k = challenge_scalar(R_enc, A_enc, MSG)
+
+    if point_neg(scalar_mul(A, k)) == R:
+
+        sig = R_enc + (0).to_bytes(57, "little")
+
+        print("Valid signature:", sig.hex())
+
+        pt = decrypt(sig)
+
+        print("FLAG:", pt)
+        break
+9. Result
+
+Running the exploit produced:
+
+Signature: 01 00 00 00 ...
+FLAG: SK-CERT{1_d0n7_kn0w_why_7h3y_d0n7_us3_7h15_curv3_t00_much}
+10. Why the Signature Looks Strange
+
+The forged signature was essentially:
+
+R = identity point
+S = 0
+
+Which normally should never verify in a correct EdDSA implementation.
+
+It works here because:
+
+the public key lies in a small subgroup
+
+the verifier does not clear the cofactor
+
+11. Real-World Relevance
+
+This exact class of bug has appeared in real systems.
+
+Examples:
+
+early Ed25519 verification mistakes
+
+Monero subgroup vulnerabilities
+
+several custom crypto libraries
+
+Correct implementations:
+
+multiply by the cofactor
+
+verify subgroup membership
+
+reject small-order public keys
+
+12. Lessons Learned
+1️⃣ Always clear the cofactor
+
+Verification must ensure points are in the prime subgroup.
+
+2️⃣ Never trust externally provided points
+
+Public keys and nonces must be validated.
+
+3️⃣ Cryptography is fragile
+
+A single missing multiplication by 4 broke the entire signature scheme.
+
+13. Final Flag
+SK-CERT{1_d0n7_kn0w_why_7h3y_d0n7_us3_7h15_curv3_t00_much}

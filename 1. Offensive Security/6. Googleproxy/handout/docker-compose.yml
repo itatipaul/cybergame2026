@@ -1,0 +1,22 @@
+services:
+  googleproxy:
+    build:
+      context: ./proxy
+    ports:
+      - "8086:8080"
+    networks:
+      - challenge
+    restart: unless-stopped
+
+  hidden-flag:
+    build:
+      context: ./flag
+    env_file:
+      - ./.env
+    networks:
+      - challenge
+    restart: unless-stopped
+
+networks:
+  challenge:
+    driver: bridge

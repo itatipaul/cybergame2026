@@ -1,0 +1,82 @@
+This detailed write-up breaks down the "MS Word Forensics" CTF challenge, focusing on the discovery and extraction of hidden data within a .docm file.
+Challenge Overview
+
+    Files Provided: Base64.docm , flag2.zip , and README2.txt.
+
+Objective: Find four hidden parts in the format HIDDEN_MSG_x_{something} within the Word document.
+
+Password Construction: Combine the contents of the four parts in the specific order 4-3-1-2.
+
+Final Goal: Use the constructed password to unlock flag2.zip and retrieve the flag.
+
+Detailed Step-by-Step Solution
+1. Initial File Analysis
+
+The file Base64.docm is a Microsoft Word Macro-Enabled Document. Modern Office files (OOXML) are essentially ZIP archives. By changing the extension to .zip or using an extraction tool, you can view the internal directory structure, which includes XML files, media, and binary macro data.
+
+2. Locating the Hidden Fragments
+
+    Part 1: The Invisible Image (Steganography)
+
+        Location: word/media/image39.png.
+
+Discovery: The document contains 54 images. While most are visible, image39.png is a high-resolution image that appears completely white to the naked eye.
+
+Extraction: Using image manipulation (adjusting contrast or inspecting pixel values), text rendered in a very light grey becomes visible.
+
+Value: HIDDEN_MSG_1_{03c77a9b}.
+
+Part 2: The Base64 "Red Herring"
+
+    Location: word/document.xml.
+
+Discovery: The main document XML contains a string that looks like a standard internal ID: SElEREVOX01TR18yX3s0N2QwMjQxYX0=.
+
+Extraction: Decoding this string from Base64 reveals the message.
+
+Value: HIDDEN_MSG_2_{47d0241a}.
+
+Part 3: Micro-Text in the Footer
+
+    Location: word/footer1.xml.
+
+Discovery: Text in the footer is hidden using two methods: it is colored white (FFFFFF) to match the background and set to a microscopic font size of 2pt.
+
+Extraction: Reviewing the raw XML in footer1.xml bypasses these visual formatting settings.
+
+Value: HIDDEN_MSG_3_{5caf69d6}.
+
+Part 4: The Macro Binary
+
+    Location: word/vbaProject.bin.
+
+Discovery: Since this is a .docm file, it contains a binary file for VBA macros.
+
+Extraction: Running a strings command on the binary file reveals another 
+
+Base64-encoded string: SElEREVOX01TR180X3sxZmYxNTE5Zn0=.
+
+Value: HIDDEN_MSG_4_{1ff1519f}.
+
+3. Final Assembly
+
+The README2.txt file specifies the exact order for the password as 4312.
+
+    Part 4: 1ff1519f 
+
+Part 3: 5caf69d6 
+
+Part 1: 03c77a9b 
+
+Part 2: 47d0241a 
+
+Complete Password: 1ff1519f5caf69d603c77a9b47d0241a 
+
+4. Capture the Flag
+
+Input the password 1ff1519f5caf69d603c77a9b47d0241a to unzip flag2.zip. 
+
+The file flag2.txt inside contains the final flag:
+
+Flag: SK-CERT{M5W0RD_F0R3N51C5} 
+

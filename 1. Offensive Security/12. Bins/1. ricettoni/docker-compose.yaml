@@ -1,0 +1,9 @@
+services:
+  ricettoni:
+    build: .
+    container_name: ricettoni
+    restart: unless-stopped
+    init: false
+    privileged: false
+    ports:
+      - "38001:1337"

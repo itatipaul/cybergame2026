@@ -1,0 +1,4 @@
+ Forensics Sanity Check - Elephant2
+Points: 100
+
+This time, I tried to hide the flag much better. You should try to check the content of the image.

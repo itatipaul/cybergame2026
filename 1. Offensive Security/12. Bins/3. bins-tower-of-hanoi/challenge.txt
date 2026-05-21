@@ -1,0 +1,5 @@
+ Bins - Tower of Hanoi
+Points: 496
+
+Back in time knights used to slay dragons and underdogs defeated giants using slingshots and stones. You might need some of these tactics here...
+nc exp.cybergame.sk 7007 

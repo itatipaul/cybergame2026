@@ -1,0 +1,6 @@
+ rEquestria - Newbie Dash
+Points: 499
+
+It seems like the git server mentioned in the emails came alive on port 2222. Can you get in there? I bet there is at least one person re-using passwords.
+
+Note: Fuzzing/bruteforcing/scanning the server using automated tools is not allowed and it will not help you to progress in the challenge

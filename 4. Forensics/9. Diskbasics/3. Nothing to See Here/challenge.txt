@@ -1,0 +1,6 @@
+DiskBasics - Nothing to See Here
+Points: 484
+
+Downloader did also some other things other than dropping malware. Maybe we are missing one more file…
+
+Note: Use files from first part. Flag format: SK-CERT{flag3_…}

@@ -1,0 +1,6 @@
+ rEquestria - Keep Calm and Flutter On
+Points: 499
+
+We have to use our access to get further.
+
+Note: Fuzzing/bruteforcing/scanning the server using automated tools is not allowed and it will not help you to progress in the challenge

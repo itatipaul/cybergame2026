@@ -1,0 +1,1 @@
+flag.zip/password.txt:$pkzip$1*2*2*0*41*35*3ea002d*0*46*0*41*36c8*ad06a38bc9547e7c090b36d7f327b81200235e6ea779a57673e40f56662578a16f669918dd9139aedff7a1074dca17e2f907326925d6ae3388dceaa49be00eaefc*$/pkzip$:password.txt:flag.zip::flag.zip

@@ -1,0 +1,8 @@
+ rEquestria - Potion Mystery
+Points: 496
+
+Looks like we cannot access the admin accounts using that vulnerability. The information we are looking for should be in the email communication of one of the admins. Your task is to retrieve it.
+
+Note: Fuzzing/bruteforcing/scanning the server using automated tools is not allowed and it will not help you to progress in the challenge
+
+ https://mail.equestriasociety.com/ 

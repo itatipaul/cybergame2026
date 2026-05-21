@@ -1,0 +1,8 @@
+
+rEquestria - The Last Problem
+Points: 499
+
+We found the last challenge!! But some meerkats are guarding it. We need to get past them to access the last flaggie.
+
+Note: Fuzzing/bruteforcing/scanning the server using automated tools is not allowed and it will not help you to progress in the challenge
+nc 178.105.103.127 8585

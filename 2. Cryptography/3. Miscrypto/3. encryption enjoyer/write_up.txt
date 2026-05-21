@@ -1,0 +1,346 @@
+# Miscrypto – encryption enjoyer
+
+**Category:** Crypto / Reverse Engineering  
+**Points:** 416
+
+## Description
+> An incident response team recovered a single file from a compromised server, but the attacker encrypted it before disconnecting. Your task is to recover the original file.
+
+---
+
+## Initial Look
+
+The challenge gives us a ZIP archive containing a single file:
+
+```bash
+$ unzip encrypted.zip
+$ ls
+encrypted
+```
+
+No extension, no obvious metadata, just vibes.
+
+Naturally, first step is to see whether this is actually “encrypted” in any meaningful sense or just lightly obfuscated.
+
+```bash
+$ file encrypted
+$ xxd encrypted | head
+```
+
+Nothing immediately useful from `file`, but the hex output already gives away something important:
+
+- there are visible repeated byte patterns
+- the data does **not** look uniformly random
+- there’s enough structure to suspect weak crypto
+
+That’s a big red flag. If this had been encrypted properly (AES, ChaCha20, etc.), it would look a lot more like noise. Instead, this smelled like classic **repeating-key XOR** or some similar homemade nonsense.
+
+---
+
+## Breaking the Outer Layer
+
+At this point I treated the file as a likely repeating-key XOR ciphertext.
+
+There are multiple ways to approach this:
+
+- normalized Hamming distance
+- index of coincidence
+- frequency analysis by key position
+- crib-dragging against common file headers
+
+In this case, the correct key length turned out to be **10 bytes**.
+
+Recovered outer key:
+
+```text
+ab31b3b2b132b4b0b932
+```
+
+Or byte-wise:
+
+```text
+ab 31 b3 b2 b1 32 b4 b0 b9 32
+```
+
+So decryption is just:
+
+```python
+from pathlib import Path
+
+data = Path("encrypted").read_bytes()
+key = bytes.fromhex("ab31b3b2b132b4b0b932")
+
+dec = bytes(b ^ key[i % len(key)] for i, b in enumerate(data))
+Path("dec.exe").write_bytes(dec)
+
+print("Recovered file written to dec.exe")
+```
+
+---
+
+## Confirming the Recovered File
+
+Now we inspect the decrypted output:
+
+```bash
+$ file dec.exe
+$ xxd dec.exe | head
+```
+
+The file begins with:
+
+```text
+4d 5a
+```
+
+So we immediately get:
+
+```text
+MZ
+```
+
+That means the decrypted file is a **Windows PE executable**.
+
+So the challenge was not “recover a document” or “recover an image” — it was actually:
+
+> recover a binary, then reverse it.
+
+Very normal CTF author behavior.
+
+---
+
+## Strings Rabbit Hole
+
+Before opening the binary in a decompiler, I ran a quick strings pass:
+
+```bash
+$ strings -n 5 dec.exe | less
+```
+
+This surfaced a few suspicious-looking strings:
+
+```text
+o321039129031290329039021903129032190321903209132victim3291392312
+xxx_victimXXXXXXXXX337
+```
+
+That immediately looked like one of those “flag template” situations where the binary constructs the final output dynamically.
+
+Even more suspicious: the executable imports things like:
+
+- `GetUserNameA`
+- `gethostname`
+
+So at first glance, it really looks like the flag may depend on the infected machine’s username / hostname.
+
+That is exactly the kind of thing that can waste 30–60 minutes if you let it.
+
+And yes, I let it.
+
+---
+
+## Reality Check: Follow the Code, Not the Strings
+
+Once the bait had wasted enough of my life, the right move was obvious: stop overthinking the weird strings and just reverse the binary properly.
+
+Opened the PE in a decompiler and started tracing execution.
+
+What mattered wasn’t the fake “victim” formatting stuff — it was the actual decryption logic.
+
+And there it was:
+
+- a buffer loaded from `.data`
+- a short byte sequence loaded from `.rdata`
+- a small XOR loop
+- output of the decrypted bytes
+
+At that point, the challenge basically solved itself.
+
+---
+
+## Inner Payload
+
+The executable contains another encrypted blob — this time, the **real flag**.
+
+### Relevant locations
+
+Encrypted blob:
+```text
+0x140003000
+```
+
+Key:
+```text
+0x140004076
+```
+
+Recovered inner key:
+
+```text
+af34f010992001
+```
+
+Byte-wise:
+
+```text
+af 34 f0 10 99 20 01
+```
+
+So once again, the “encryption” is just repeating XOR.
+
+---
+
+## Extracting the Real Flag
+
+Using file offsets from the PE, we can recover it directly without bothering to emulate anything.
+
+```python
+from pathlib import Path
+
+p = Path("dec.exe").read_bytes()
+
+# encrypted flag blob
+blob = bytearray(p[0x1e00:0x1e00 + 0x29])
+
+# XOR key
+key = p[0x2076:0x2076 + 7]
+
+for i in range(len(blob)):
+    blob[i] ^= key[i % len(key)]
+
+print(blob.decode())
+```
+
+Output:
+
+```text
+SK-CERT{d3CRyp73D_5uCce55fulLy_W3LL_D0N3}
+```
+
+---
+
+## Flag
+
+```text
+SK-CERT{d3CRyp73D_5uCce55fulLy_W3LL_D0N3}
+```
+
+---
+
+## Full Solve Chain
+
+### Layer 1
+The provided mystery file was XOR’d with a **10-byte repeating key**:
+
+```text
+ab31b3b2b132b4b0b932
+```
+
+Decrypting it revealed a PE executable.
+
+### Layer 2
+The PE contained another XOR-obfuscated blob, using a **7-byte key**:
+
+```text
+af34f010992001
+```
+
+Decrypting that revealed the actual flag.
+
+---
+
+## Why This Challenge Was Nice
+
+This was a clean little challenge because it combined:
+
+- weak crypto recognition
+- ciphertext analysis
+- XOR recovery
+- file type identification
+- basic PE reversing
+- classic misdirection via fake strings
+
+The nice part is that it punishes one very common CTF mistake:
+
+> stopping after the first successful decryption
+
+Getting the PE was not the solve.  
+It was just the **next artifact**.
+
+That’s also a good lesson outside CTFs — especially in malware analysis / incident response:
+
+> If the recovered object is executable, it may still contain the real payload.
+
+---
+
+## Lessons / Takeaways
+
+### 1) “Encrypted” often just means “XOR’d”
+If a challenge says something was encrypted, do not assume strong cryptography. In CTF land, it often means:
+
+- XOR
+- rolling XOR
+- additive byte transform
+- nibble swapping
+- or some cursed homemade variant
+
+### 2) Headers are your best friend
+Magic bytes save lives.
+
+Examples:
+- `MZ` → Windows PE
+- `PK` → ZIP
+- `%PDF` → PDF
+- `\x89PNG` → PNG
+
+As soon as `MZ` appeared, the path forward became obvious.
+
+### 3) Strings can absolutely lie
+The weird `victim` strings were there to bait solvers into decoding irrelevant garbage.
+
+Very effective. Very rude.
+
+### 4) Control flow beats vibes
+If the strings look important but the code says otherwise, trust the code.
+
+Always.
+
+---
+
+## Scripts
+
+### Outer Decryption
+```python
+from pathlib import Path
+
+data = Path("encrypted").read_bytes()
+key = bytes.fromhex("ab31b3b2b132b4b0b932")
+
+dec = bytes(b ^ key[i % len(key)] for i, b in enumerate(data))
+Path("dec.exe").write_bytes(dec)
+
+print("Recovered PE executable: dec.exe")
+```
+
+### Inner Flag Extraction
+```python
+from pathlib import Path
+
+p = Path("dec.exe").read_bytes()
+
+blob = bytearray(p[0x1e00:0x1e00 + 0x29])
+key = p[0x2076:0x2076 + 7]
+
+for i in range(len(blob)):
+    blob[i] ^= key[i % len(key)]
+
+print(blob.decode())
+```
+
+---
+
+## Final Answer
+
+```text
+SK-CERT{d3CRyp73D_5uCce55fulLy_W3LL_D0N3}
+```

@@ -1,0 +1,6 @@
+ Lore of the world - Server room
+Points: 489
+
+I found a polaroid of some kind of server room. On the back side of the polaroid, there’s a message saying: "Ebbg cnffjbeq: <rzcyblrr bs gur zbagu>". I heard the servers store data related to my investigation. Something tells me this is the last place I need to find to learn the origin of everything in this world. I need to find this facility, but we have to make sure we know it’s the exact one. To confirm it’s the correct one, I have devised a three-step process. Step 1. Find the Minecraft ID name of the highest man-placed block in the area of this base. For example: minecraft:slime_block Step 2. Find the Y coordinate of the highest man-placed block in the area of this base. Step 3. Find the employee of the month’s name inside the facility.
+
+Flag format: SK-CERT{minecraft:block_id-YYY-employee}

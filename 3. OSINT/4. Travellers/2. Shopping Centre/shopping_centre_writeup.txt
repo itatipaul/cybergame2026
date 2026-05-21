@@ -1,0 +1,50 @@
+Challenge Overview
+
+    Target: A second suspect using the handle BelkaAndStrelka.
+
+    Goal: Identify the building located directly behind the photographer who took the provided image.
+
+    Flag Format: SK-CERT{Building_Name}
+
+Phase 1: Visual Landmark Identification
+
+The image (travellers_part2.jpg) features a massive, modern sports complex. Key identifiers include:
+
+    Architecture: A large, circular glass-and-steel arena with a distinctive tiered roof.
+
+    National Identity: Several flags are visible in front of the building. They are red and green with a white-on-red ornamental pattern on the hoist side—the national flag of Belarus.
+
+    Contextual Clue: The username BelkaAndStrelka refers to the Soviet space dogs, reinforcing the connection to a post-Soviet state like Belarus.
+
+By searching for "large circular arena Minsk Belarus," the building is easily identified as the Minsk-Arena (Минск-Арена).
+Phase 2: Determining Photographer Position
+
+To find what is behind the photographer, we need to establish their exact coordinates:
+
+    Perspective: The photographer is standing in the large pedestrian plaza (Pobediteley Avenue side) looking directly at the main entrance of the Minsk-Arena.
+
+    Orientation: They are facing roughly North-East toward the arena.
+
+    The "Behind" View: This means the photographer’s back is turned toward Pobediteley Avenue (Проспект Победителей).
+
+Phase 3: Locating the Shopping Centre
+
+Using Google Maps/Satellite view to look directly across the street from the Minsk-Arena plaza:
+
+    Directly across Pobediteley Avenue (southwest of the arena) sits a massive, multi-story modern building.
+
+    This building is a major commercial hub designed to serve the arena crowds.
+
+    The name of this building is the Arena City (or ARENAcity) shopping mall.
+
+Phase 4: Final Verification
+
+    Challenge Title: "Shopping Centre"—this confirms the target is a retail building.
+
+    Logic: The "Travellers" group members are likely hopping between major transit hubs or high-traffic landmarks. Moving from a college in Canada to a massive mall/arena complex in Belarus fits the "global" nature of the group mentioned in the first challenge.
+
+Final Solution
+
+The building directly behind the photographer at the Minsk-Arena plaza is the Arena City mall.
+
+Flag: > SK-CERT{Arena_City}
