@@ -1,10 +1,13 @@
 # Maverick
 
-Author - Senpai
+# Author - Senpai
+
 Flag: SK-CERT{d3bu6_my_fly1ng_m4ch1n3}
+
 Maverick — Detailed Writeup
 
 Points: 495 | Category: MAVLink / Drone / Protocol Exploitation
+
 Challenge
 
     Can you hack Maverick as he flies by? nc exp.cybergame.sk 7030
