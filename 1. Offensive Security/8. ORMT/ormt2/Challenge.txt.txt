@@ -1,0 +1,5 @@
+ ORMT - ormt2
+Points: 416
+
+Following our previous engagement, the development team claims to have patched all identified vulnerabilities and has overhauled their authentication system from scratch. They are requesting a re-test to confirm the fixes are effective and to identify any new security issues. Your objective is to bypass authentication and log in as the admin to retrieve the flag.
+http://exp.cybergame.sk:7002 

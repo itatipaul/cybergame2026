@@ -1,0 +1,9 @@
+ ORMT - ormt3
+Points: 419
+
+The development team has revised the application once more, addressing all vulnerabilities reported during the previous two engagements. They have also introduced a new book repository feature with advanced filtering and aggregation capabilities. An admin area still exists and displays the flag upon successful authentication.
+
+We have been asked to perform another security assessment of the updated application.
+
+Your objective is to gain unauthorized access to the admin area and retrieve the flag.
+http://exp.cybergame.sk:7003 

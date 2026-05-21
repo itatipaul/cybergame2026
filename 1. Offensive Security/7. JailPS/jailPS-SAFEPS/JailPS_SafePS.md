@@ -1,10 +1,15 @@
 # JailPS – SafePS
 
 Author - Senpai
+
 Challenge: JailPS - Safeps
+
 Category: Misc / PowerShell Jail
+
 Points: 451
+
 Goal: Bypass a "hardened" PowerShell environment to read the $FLAG variable.
+
 1. Analysis
 
 The challenge provides a .ps1 script that acts as a restricted shell. It uses a massive blacklist of cmdlets, aliases, and dangerous characters.

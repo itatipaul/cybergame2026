@@ -1,4 +1,4 @@
- Crypto Sanity Check - x^y encryption
+Crypto Sanity Check - x^y encryption
 Points: 100
 
 I was given a ciphertext and an encryptor. Find a way to decrypt the ciphertext to get the plaintext. You don't need to code anything; try using gchq.github.io/CyberChef.

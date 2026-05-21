@@ -1,0 +1,5 @@
+ JailPS - safeps
+Points: 100
+
+Get flag. Or git gud.
+nc exp.cybergame.sk 7004 

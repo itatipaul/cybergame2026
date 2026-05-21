@@ -1,0 +1,5 @@
+JailPS - safeps2
+Points: 116
+
+Get flag. Or git gud. Previous chall was too ez, right?
+nc exp.cybergame.sk 7005 

@@ -1,0 +1,18 @@
+Title: Crypto Sanity Check - Layers of encoding
+Author: senpai
+Points: 100
+
+Challenge Solution:
+The provided cipher consists of three distinct layers of encoding.
+
+Layer 1: Decimal to ASCII
+The initial sequence is a list of decimal numbers separated by spaces. Converting these decimal values to ASCII characters yields a string of hexadecimal characters.
+Output: 55 30 73 74 51 30 56 53 56 48 74 73 4e 48 6b 7a 63 6a 4e 6b 58 32 78 70 61 7a 4e 66 4e 47 35 66 4d 47 35 70 4d 47 35 39
+
+Layer 2: Hexadecimal to ASCII
+Taking the hexadecimal output from the previous step and converting it to ASCII results in a continuous alphanumeric string.
+Output: U0stQ0VSVHtsNHkzcjNkX2xpazNfNG5fMG5pMG59
+
+Layer 3: Base64 Decoding
+The resulting string is formatted in Base64. Decoding this string reveals the final hidden message.
+Result: SK-CERT{l4y3r3d_lik3_4n_0ni0n}
