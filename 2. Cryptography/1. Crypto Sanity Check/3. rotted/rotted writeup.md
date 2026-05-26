@@ -1,6 +1,8 @@
 # Crypto Sanity Check - rotted
 **Author:** Senpai  
+
 **Points:** 100
+
 *Flag - SK-CERT{symm37ric_r0747i0n}*
 
 ## Overview
