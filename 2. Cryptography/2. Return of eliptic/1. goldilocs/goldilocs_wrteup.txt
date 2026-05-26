@@ -1,5 +1,5 @@
 Goldilocks Curve – CTF Writeup
-
+Author - Senpai
 Category: Cryptography
 Concepts: EdDSA, Edwards Curves, Cofactor, Small-Subgroup Attack
 
@@ -252,15 +252,15 @@ verify subgroup membership
 reject small-order public keys
 
 12. Lessons Learned
-1️⃣ Always clear the cofactor
+Always clear the cofactor
 
 Verification must ensure points are in the prime subgroup.
 
-2️⃣ Never trust externally provided points
+Never trust externally provided points
 
 Public keys and nonces must be validated.
 
-3️⃣ Cryptography is fragile
+Cryptography is fragile
 
 A single missing multiplication by 4 broke the entire signature scheme.
 
