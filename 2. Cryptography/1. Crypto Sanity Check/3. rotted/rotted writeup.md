@@ -1,6 +1,7 @@
 # Crypto Sanity Check - rotted
 **Author:** Senpai  
 **Points:** 100
+*Flag - SK-CERT{symm37ric_r0747i0n}*
 
 ## Overview
 The challenge presents a ciphertext string that has been obfuscated using a Caesar cipher variant. The title "rotted" heavily implies a ROT encoding scheme.
