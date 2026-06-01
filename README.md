@@ -133,9 +133,10 @@ Each challenge folder contains:
 ## 🔍 OSINT
 
 ### Target
-| Challenge | Writeup |
-|-----------|---------|
-| Target | No writeup yet |
+| Challenge   | Writeup |
+|-------------|---------|
+| Target      |Target.md|
+
 
 ### OSINT Sanity Check
 | Challenge | Writeup |
